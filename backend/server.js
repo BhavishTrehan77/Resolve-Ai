@@ -15,11 +15,10 @@ const cors = require('cors');
 
 const app=express()
 app.use(cors({
-    origin: "https://resolve-ai-virid.vercel.app",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
+    origin: "https://resolve-ai-virid.vercel.app"
 }));
+
+app.options("*", cors());
 app.use(express.json())
 
 
