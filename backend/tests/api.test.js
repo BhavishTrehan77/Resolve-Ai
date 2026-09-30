@@ -1,25 +1,42 @@
 const request = require("supertest");
 const jwt = require("jsonwebtoken");
+
 process.env.NODE_ENV = "test";
+
 const app = require("../server");
 
 describe("API Security, Auth Validation & Routing", () => {
-    const jwtSecret = process.env.JWT_ACCESS_SECRET || "AccSecKey";
+    const jwtSecret = process.env.JWT_ACCESS_SECRET;
+
+    if (!jwtSecret) {
+        throw new Error("JWT_ACCESS_SECRET is not configured");
+    }
 
     // Sample tokens for RBAC tests
     const employeeToken = jwt.sign(
-        { id: "660000000000000000000001", role: "EMPLOYEE" },
+        {
+            id: "660000000000000000000001",
+            role: "EMPLOYEE"
+        },
         jwtSecret,
-        { expiresIn: "1h" }
+        {
+            expiresIn: "1h"
+        }
     );
 
     const agentToken = jwt.sign(
-        { id: "660000000000000000000002", role: "AGENT" },
+        {
+            id: "660000000000000000000002",
+            role: "AGENT"
+        },
         jwtSecret,
-        { expiresIn: "1h" }
+        {
+            expiresIn: "1h"
+        }
     );
 
     describe("Authentication Endpoints", () => {
+
         test("should reject signup with missing required fields", async () => {
             const res = await request(app)
                 .post("/api/v1/signup")
@@ -68,14 +85,19 @@ describe("API Security, Auth Validation & Routing", () => {
     });
 
     describe("Protected Routes Token Verification", () => {
+
         test("should reject unauthorized access to tickets without token", async () => {
-            const res = await request(app).get("/api/ticket/my");
+            const res = await request(app)
+                .get("/api/ticket/my");
+
             expect(res.status).toBe(401);
             expect(res.body.success).toBe(false);
         });
 
         test("should reject unauthorized access to admin stats without token", async () => {
-            const res = await request(app).get("/api/admin/stats");
+            const res = await request(app)
+                .get("/api/admin/stats");
+
             expect(res.status).toBe(401);
             expect(res.body.success).toBe(false);
         });
@@ -99,13 +121,16 @@ describe("API Security, Auth Validation & Routing", () => {
         });
 
         test("should return 404 for unknown endpoints", async () => {
-            const res = await request(app).get("/api/nonexistent-route");
+            const res = await request(app)
+                .get("/api/nonexistent-route");
+
             expect(res.status).toBe(404);
             expect(res.body.errorType).toBe("NOT_FOUND");
         });
     });
 
     describe("Role-Based Access Control (RBAC)", () => {
+
         test("should forbid EMPLOYEE from accessing admin stats (403)", async () => {
             const res = await request(app)
                 .get("/api/admin/stats")
@@ -164,7 +189,9 @@ describe("API Security, Auth Validation & Routing", () => {
             const res = await request(app)
                 .patch("/api/user/660000000000000000000001")
                 .set("Authorization", `Bearer ${employeeToken}`)
-                .send({ role: "ADMIN" });
+                .send({
+                    role: "ADMIN"
+                });
 
             expect(res.status).toBe(403);
             expect(res.body.success).toBe(false);
@@ -174,7 +201,9 @@ describe("API Security, Auth Validation & Routing", () => {
             const res = await request(app)
                 .patch("/api/user/660000000000000000000002")
                 .set("Authorization", `Bearer ${agentToken}`)
-                .send({ role: "ADMIN" });
+                .send({
+                    role: "ADMIN"
+                });
 
             expect(res.status).toBe(403);
             expect(res.body.success).toBe(false);
@@ -213,6 +242,7 @@ describe("API Security, Auth Validation & Routing", () => {
 
     afterAll(async () => {
         const mongoose = require("mongoose");
+
         await mongoose.connection.close();
     });
 });
