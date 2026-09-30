@@ -39,7 +39,7 @@ export const Signup = () => {
       } else if (err.response?.status === 500) {
         message = 'User registration failed. This email may already be registered, or name/password is invalid.';
       } else if (err.code === 'ERR_NETWORK') {
-        message = 'Cannot connect to backend server. Make sure backend is running on port 3000.';
+        message = 'Cannot connect to backend server. If using Render free tier, the server may take 30-50 seconds to wake up from sleep. Please wait a moment and try again.';
       }
       setError(message);
     } finally {

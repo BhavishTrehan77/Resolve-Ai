@@ -40,7 +40,7 @@ export const Login = () => {
       if (err.response?.status === 500 || err.response?.data?.message) {
         message = err.response?.data?.message || 'User not found or password incorrect. Please sign up if you do not have an account yet.';
       } else if (err.code === 'ERR_NETWORK') {
-        message = 'Cannot connect to backend server. Make sure backend is running on port 3000.';
+        message = 'Cannot connect to backend server. If using Render free tier, the server may take 30-50 seconds to wake up from sleep. Please wait a moment and try again.';
       }
       setError(message);
     } finally {

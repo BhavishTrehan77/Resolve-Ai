@@ -57,6 +57,14 @@ app.use("/api/knowledge",knowledgeRouter)
 app.use("/api/rag",ragRouter)
 app.use("/api/admin", adminRouter);
 
+// Root and Health Check endpoints for deployment monitoring (Render, Railway, AWS, etc.)
+app.get("/", (req, res) => {
+    res.status(200).json({ success: true, message: "ResolveAI API Server is live" });
+});
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+
 // 404 Handler for unmatched routes
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 app.use(notFoundHandler);

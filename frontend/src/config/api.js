@@ -1,6 +1,9 @@
 // API Configuration
-// Using relative path '' delegates requests to Vite dev proxy (target: http://localhost:3000)
-export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+// In local development, relative path '' uses Vite dev proxy (target: http://localhost:3000).
+// In production, uses VITE_API_URL env var or defaults to the deployed Render backend URL.
+export const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? '' : 'https://resolve-ai-x6mn.onrender.com');
 
 export const API_ENDPOINTS = {
   // Auth
