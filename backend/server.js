@@ -11,19 +11,11 @@ const ragRouter=require('./ai/rag/rag.routes')
 const adminRouter=require('./modules/admin/admin.route')
 const knowledgeRouter=require('./modules/knowledge/knowledge.route')
 
-const app=express()
-app.use(express.json())
+const cors = require('cors');
 
-// Enable CORS
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-    }
-    next();
-});
+const app=express()
+app.use(cors());
+app.use(express.json())
 
 
 const { bootstrapDefaultUsers } = require('./config/bootstrap');
