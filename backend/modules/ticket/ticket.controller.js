@@ -2,7 +2,10 @@ const { createTicket, getTicketById, getAllTicket, updateTicket, deleteTicket, g
 
 const createticket=async(req,resp)=>{
     try {
-        const data=await createTicket({...req.body,createdBy:req.user.id})
+        const payload = { ...req.body };
+        delete payload.createdBy;
+        delete payload.userId;
+        const data=await createTicket({ ...payload, createdBy: req.user.id })
         resp.json({
             success: true,
             data,
@@ -21,7 +24,9 @@ const getticket=async(req,resp)=>{
             Data: data
         })
     } catch (err) {
-        resp.status(404).json({ success: false, message: err.message })
+        const isAuthError = err.message.includes("Unauthorized") || err.message.includes("Forbidden");
+        const status = isAuthError ? 403 : 404;
+        resp.status(status).json({ success: false, message: err.message })
     }
 }
 
@@ -46,7 +51,8 @@ const updateticket=async(req,resp)=>{
             Data: data
         })
     } catch (err) {
-        resp.status(400).json({ success: false, message: err.message })
+        const isAuthError = err.message.includes("Unauthorized") || err.message.includes("Forbidden");
+        resp.status(isAuthError ? 403 : 400).json({ success: false, message: err.message })
     }
 }
 
@@ -125,7 +131,8 @@ const updateAI=async(req,resp)=>{
             data
         })
     } catch (err) {
-        resp.status(400).json({ message: err.message });
+        const isAuthError = err.message.includes("only modify") || err.message.includes("Unauthorized");
+        resp.status(isAuthError ? 403 : 400).json({ message: err.message });
     }
 }
 
@@ -142,7 +149,8 @@ const resolveTicketController = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(400).json({
+        const isAuthError = error.message.includes("only resolve") || error.message.includes("Unauthorized");
+        res.status(isAuthError ? 403 : 400).json({
             message: error.message
         });
     }

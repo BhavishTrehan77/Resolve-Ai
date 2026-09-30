@@ -2,6 +2,12 @@ const { GetUserById, getAllUser, deleteUser, updateUser, createUser } = require(
 
 const GetUser=async(req,resp)=>{
     try {
+        if (req.user?.role !== "ADMIN" && req.params.id !== req.user?.id) {
+            return resp.status(403).json({
+                success: false,
+                message: "Forbidden: You are unauthorized to access other user profiles"
+            });
+        }
         const data=await GetUserById(req.params.id)
         resp.json({
             success: true,

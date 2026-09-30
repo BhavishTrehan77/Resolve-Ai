@@ -76,10 +76,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Signup handler
-  const signup = async (name, email, password, role = 'EMPLOYEE') => {
-    const response = await authService.signup(name, email, password, role);
-    const jwtToken = response.data?.assToken || response.data?.token;
-    const newUser = response.data?.user || { name, email, role };
+  const signup = async (name, email, password) => {
+    const response = await authService.signup(name, email, password);
+    const jwtToken = response.data?.assToken || response.data?.token || response.data?.AccToken;
+    const decoded = decodeToken(jwtToken);
+    const newUser = response.data?.user || {
+      name,
+      email,
+      role: decoded?.role || 'EMPLOYEE'
+    };
 
     if (jwtToken) {
       localStorage.setItem('token', jwtToken);

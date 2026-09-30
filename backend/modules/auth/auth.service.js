@@ -4,25 +4,18 @@ const jwt=require('jsonwebtoken')
 const crypto=require('crypto')
 
 
-const Signup=async({name,email,password,role})=>{
+const Signup=async({name,email,password})=>{
     const existingUser=await User.findOne({email})
     if(existingUser){
         throw new Error("user already exists")
     }
     const hashedPassword=await bcrypt.hash(password,10)
 
-    let assignedRole = "EMPLOYEE";
-    const userCount = await User.countDocuments();
-    if (userCount === 0) {
-        // Bootstrap: first user created in an empty database can be ADMIN
-        assignedRole = role === "ADMIN" ? "ADMIN" : "ADMIN";
-    }
-
     const user=await User.create({
         name,
         email,
         password:hashedPassword,
-        role: assignedRole
+        role: "EMPLOYEE"
     })
     const token=jwt.sign({id:user._id,role:user.role},process.env.JWT_ACCESS_SECRET,{expiresIn:"12d"})
     return{

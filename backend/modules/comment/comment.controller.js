@@ -27,7 +27,8 @@ const createCommentController = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(400).json({
+        const isAuthError = error.message.includes("You can comment only") || error.message.includes("Unauthorized");
+        res.status(isAuthError ? 403 : 400).json({
             success: false,
             message: error.message
         });
@@ -44,7 +45,8 @@ const getcommbyticket = async (req, resp) => {
             Data: T
         });
     } catch (err) {
-        resp.status(400).json({ success: false, message: err.message });
+        const isAuthError = err.message.includes("Unauthorized") || err.message.includes("Forbidden");
+        resp.status(isAuthError ? 403 : 400).json({ success: false, message: err.message });
     }
 };
 
@@ -58,7 +60,8 @@ const deletecomm = async (req, resp) => {
             Data: D
         });
     } catch (err) {
-        resp.status(400).json({ success: false, message: err.message });
+        const isAuthError = err.message.includes("Unauthorized") || err.message.includes("Forbidden");
+        resp.status(isAuthError ? 403 : 400).json({ success: false, message: err.message });
     }
 };
 

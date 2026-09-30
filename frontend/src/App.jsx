@@ -70,20 +70,22 @@ function App() {
               {/* Universal Ticket Details */}
               <Route path="/ticket/:id" element={<TicketDetails />} />
 
-              {/* Employee Routes (accessible to all authenticated users) */}
-              <Route path="/employee" element={<EmployeeDashboard />} />
-              <Route path="/employee/create-ticket" element={<CreateTicket />} />
-              <Route path="/employee/my-tickets" element={<MyTickets />} />
+              {/* Employee Routes (strictly EMPLOYEE only) */}
+              <Route element={<ProtectedRoute allowedRoles={['EMPLOYEE']} />}>
+                <Route path="/employee" element={<EmployeeDashboard />} />
+                <Route path="/employee/create-ticket" element={<CreateTicket />} />
+                <Route path="/employee/my-tickets" element={<MyTickets />} />
+                <Route path="/employee/ai-assistant" element={<AiAssistant />} />
+              </Route>
 
-              {/* Agent Routes */}
-              <Route element={<ProtectedRoute allowedRoles={['AGENT', 'ADMIN']} />}>
+              {/* Agent Routes (strictly AGENT only) */}
+              <Route element={<ProtectedRoute allowedRoles={['AGENT']} />}>
                 <Route path="/agent" element={<AgentDashboard />} />
                 <Route path="/agent/assigned" element={<AssignedTickets />} />
                 <Route path="/agent/escalated" element={<EscalatedTickets />} />
-                <Route path="/agent/all-tickets" element={<AllTickets />} />
               </Route>
 
-              {/* Admin Routes */}
+              {/* Admin Routes (strictly ADMIN only) */}
               <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/tickets" element={<AllTickets />} />

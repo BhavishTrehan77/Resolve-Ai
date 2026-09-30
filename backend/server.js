@@ -26,11 +26,16 @@ app.use((req, res, next) => {
 });
 
 
+const { bootstrapDefaultUsers } = require('./config/bootstrap');
+
 async function connectDb(){
     try {
         const url = (process.env.MONGO_URL || '').trim()
         await mongoose.connect(url)
         console.log("mongodb connection done")
+        if (process.env.NODE_ENV !== 'test') {
+            await bootstrapDefaultUsers();
+        }
     } catch (err) {
         console.error("MongoDB connection error:", err.message)
     }

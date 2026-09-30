@@ -9,7 +9,11 @@ const createTicket=async(data)=>{
         ticket.aiTriage = agentRes.triage;
         ticket.aiDiagnosis = agentRes.diagnosis;
         ticket.aiResolution = agentRes.resolution;
-        ticket.aiConfidence = agentRes.retrieval?.confidence || 0;
+        const retConf = agentRes.retrieval?.confidence;
+        const diagConf = agentRes.diagnosis?.confidence;
+        ticket.aiConfidence = typeof retConf === 'number' && retConf > 0 
+            ? retConf 
+            : (typeof diagConf === 'number' && diagConf > 0 ? diagConf : 0.5);
         ticket.aiEscalated = agentRes.escalation?.escalate || false;
 
         if (agentRes.triage?.category) ticket.category = agentRes.triage.category;
@@ -60,6 +64,7 @@ const getTicketById=async(ticketId, user)=>{
                 throw new Error("Unauthorized to access this ticket");
             }
         }
+        // ADMIN can view all organization tickets
     }
 
     return ticket;
@@ -242,7 +247,7 @@ const resolveTicket=async(ticketId,user)=>{
     }
 
     if (user && user.role === "AGENT") {
-        const assignedId = ticket.assignedTo.toString();
+        const assignedId = ticket.assignedTo?._id?.toString() || ticket.assignedTo?.toString();
         if (assignedId !== user.id.toString()) {
             throw new Error("You can only resolve tickets assigned to you");
         }

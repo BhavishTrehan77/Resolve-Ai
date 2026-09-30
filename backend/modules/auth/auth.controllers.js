@@ -2,8 +2,8 @@ const { Signup, Login, Forgot, Reset } = require("./auth.service")
 
 const signup=async(req,resp)=>{
     try {
-        const{name,email,password,role}=req.body
-        const data=await Signup({name,email,password,role})
+        const { name, email, password } = req.body;
+        const data = await Signup({ name, email, password });
         resp.status(201).json({
             success: true,
             message: "User registered successfully",

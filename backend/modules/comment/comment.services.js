@@ -18,13 +18,12 @@ const getTicketComments=async(ticketId, user)=>{
     }
 
     if (user) {
-        const creatorId = ticket.createdBy?.toString();
-        const assignedId = ticket.assignedTo?.toString();
+        const creatorId = ticket.createdBy?._id?.toString() || ticket.createdBy?.toString();
+        const assignedId = ticket.assignedTo?._id?.toString() || ticket.assignedTo?.toString();
 
         if (user.role === "EMPLOYEE" && creatorId !== user.id.toString()) {
             throw new Error("Unauthorized to view comments on this ticket");
-        }
-        if (user.role === "AGENT") {
+        } else if (user.role === "AGENT") {
             const isAssigned = assignedId === user.id.toString();
             const isEscalated = ticket.status === "ESCALATED" || ticket.aiEscalated === true;
             if (!isAssigned && !isEscalated) {
@@ -66,15 +65,17 @@ const createComm = async (ticketId, userId, content) => {
     }
 
     if (user.role === "EMPLOYEE") {
-        if (ticket.createdBy.toString() !== userId.toString()) {
+        const creatorId = ticket.createdBy?._id?.toString() || ticket.createdBy?.toString();
+        if (creatorId !== userId.toString()) {
             throw new Error("You can comment only on your own ticket");
         }
     }
 
     if (user.role === "AGENT") {
+        const assignedId = ticket.assignedTo?._id?.toString() || ticket.assignedTo?.toString();
         if (
-            !ticket.assignedTo ||
-            ticket.assignedTo.toString() !== userId.toString()
+            !assignedId ||
+            assignedId !== userId.toString()
         ) {
             throw new Error("You can comment only on assigned tickets");
         }

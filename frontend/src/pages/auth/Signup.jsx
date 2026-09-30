@@ -7,7 +7,6 @@ export const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('EMPLOYEE');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -30,11 +29,8 @@ export const Signup = () => {
 
     try {
       setLoading(true);
-      const res = await signup(name.trim(), email.trim(), password, role);
-      const assignedRole = (res?.data?.user?.role || role || 'EMPLOYEE').toUpperCase();
-      if (assignedRole === 'ADMIN') navigate('/admin');
-      else if (assignedRole === 'AGENT') navigate('/agent');
-      else navigate('/employee');
+      await signup(name.trim(), email.trim(), password);
+      navigate('/employee');
     } catch (err) {
       console.error('Signup error:', err);
       let message = 'Registration failed. Please try again.';

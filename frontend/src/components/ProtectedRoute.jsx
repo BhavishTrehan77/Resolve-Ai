@@ -24,21 +24,15 @@ export const ProtectedRoute = ({ allowedRoles = [] }) => {
 
   const userRole = (user.role || 'EMPLOYEE').toUpperCase();
 
-  // If specific roles are required
+  // If specific roles are required, strictly check them
   if (allowedRoles.length > 0) {
-    // Treat OFFICER or other user roles as EMPLOYEE access
     const effectiveRoles = allowedRoles.map((r) => r.toUpperCase());
-    const isEmployeeRole = ['EMPLOYEE', 'OFFICER', 'USER'].includes(userRole);
-
-    const hasAccess =
-      effectiveRoles.includes(userRole) ||
-      (effectiveRoles.includes('EMPLOYEE') && isEmployeeRole) ||
-      userRole === 'ADMIN'; // Admin has access to all sections
+    const hasAccess = effectiveRoles.includes(userRole);
 
     if (!hasAccess) {
       if (userRole === 'ADMIN') return <Navigate to="/admin" replace />;
       if (userRole === 'AGENT') return <Navigate to="/agent" replace />;
-      if (location.pathname !== '/employee') return <Navigate to="/employee" replace />;
+      return <Navigate to="/employee" replace />;
     }
   }
 

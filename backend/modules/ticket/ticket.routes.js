@@ -37,8 +37,8 @@ router.get("/assigned", AuthMiddleware, Rbac("AGENT", "ADMIN"), getAssignedTicke
 router.get("/escalated", AuthMiddleware, Rbac("AGENT", "ADMIN"), getEscalatedTicketsController);
 router.get("/agent/stats", AuthMiddleware, Rbac("AGENT", "ADMIN"), getAgentStatsController);
 
-// 3. Organization wide (Admin / Agent / Employee)
-router.get("/", AuthMiddleware, getAllticket);
+// 3. Organization wide (Admin only)
+router.get("/", AuthMiddleware, Rbac("ADMIN"), getAllticket);
 
 // 4. Ticket parameter routes (must be after named static routes)
 router.get("/:id", AuthMiddleware, getticket);

@@ -9,8 +9,8 @@ export const authService = {
   },
 
   // Signup new user
-  signup: async (name, email, password, role = 'EMPLOYEE') => {
-    const res = await api.post(API_ENDPOINTS.SIGNUP, { name, email, password, role });
+  signup: async (name, email, password) => {
+    const res = await api.post(API_ENDPOINTS.SIGNUP, { name, email, password });
     return res.data;
   },
 

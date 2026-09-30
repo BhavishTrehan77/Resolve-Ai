@@ -1,0 +1,127 @@
+<USER_REQUEST>
+You are a senior full-stack AI engineer.
+
+Build a complete internship/resume-ready full-stack GenAI project called:
+
+RESOLVEAI
+AI-Powered IT Incident & Support Management Platform
+
+IMPORTANT:
+Before writing or changing code, inspect the existing codebase carefully.
+
+Do NOT blindly rewrite the project.
+Reuse existing working code wherever possible.
+If something already exists and works, improve/integrate it instead of rebuilding it.
+
+The goal is to build a polished, production-style internship/resume-ready application.
+
+Do NOT add unnecessary infrastructure such as:
+- Redis
+- BullMQ
+- Kafka
+- RabbitMQ
+- Kubernetes
+- complex microservices
+- unnecessary Docker infrastructure
+
+Keep the architecture modular but simple.
+
+==================================================
+1. PRODUCT IDEA
+==================================================
+
+ResolveAI is an AI-powered IT support and incident management platform.
+
+Employees can create IT support tickets.
+
+The AI system automatically:
+
+1. Understands the ticket
+2. Classifies the issue
+3. Determines priority
+4. Understands user intent
+5. Searches the organization's knowledge base
+6. Retrieves relevant documentation
+7. Diagnoses the likely root cause
+8. Generates a practical resolution
+9. Calculates confidence
+10. Escalates the ticket to a human agent when confidence is low
+
+Human support agents can then:
+
+- View assigned tickets
+- View escalated tickets
+- Read AI analysis
+- Modify AI-generated diagnosis/resolution
+- Add comments
+- Resolve tickets
+
+Admins can:
+
+- View system statistics
+- Manage users
+- View tickets
+- View escalated tickets
+- Upload knowledge documents
+- Manage the knowledge base
+
+The system should demonstrate:
+
+- LLM usage
+- RAG
+- Embeddings
+- Vector search
+- Query rewriting
+- Reranking
+- Multi-agent architecture
+- AI confidence
+- Human-in-the-loop
+- Role-based access control
+- Full-stack integration
+
+==================================================
+2. TECH STACK
+<truncated 15538 bytes>
+
+- status
+- comment content
+- IDs
+- AI output
+
+Reject invalid input.
+
+Use a consistent validation strategy.
+
+==================================================
+33. AI JSON PARSING
+==================================================
+
+Do NOT duplicate JSON cleaning logic in every agent.
+
+Create:
+
+utils/parseAIJson.js
+
+It should safely handle cases where model returns:
+
+```json
+{
+  ...
+} this was my project i hgave written all the details in this abhi i am not impelemnting socket io or redis in this project jitna bna h isko analyze kro backend i think completed h agr kch error h ya  missing h then fix it and also if you werite or edit anytjhing write simple code dont write ai hardcode and also see every page should be there accroding to prpoject every functionality shpuld be working nothing should break do this for mee fast and make a list what things you changed
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-30T10:21:16+05:30.
+
+The user's current state is as follows:
+Active Document: c:\Users\BHAVISH\OneDrive\Desktop\Resolve-ai\backend\modules\documents\document.controller.js (LANGUAGE_JAVASCRIPT)
+Cursor is on line: 1
+Other open documents:
+- c:\Users\BHAVISH\OneDrive\Desktop\Resolve-ai\frontend\src\pages\admin\UploadDoc.jsx (LANGUAGE_JAVASCRIPT)
+- c:\Users\BHAVISH\OneDrive\Desktop\Resolve-ai\frontend\src\services\ticketService.js (LANGUAGE_JAVASCRIPT)
+- c:\Users\BHAVISH\OneDrive\Desktop\Resolve-ai\frontend\src\services\authService.js (LANGUAGE_JAVASCRIPT)
+- c:\Users\BHAVISH\OneDrive\Desktop\Resolve-ai\backend\ai\rag\retrieval.js (LANGUAGE_JAVASCRIPT)
+- c:\Users\BHAVISH\OneDrive\Desktop\Resolve-ai\backend\modules\auth\auth.controllers.js (LANGUAGE_JAVASCRIPT)
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.8 Flash (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

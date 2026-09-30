@@ -7,8 +7,8 @@ const { updateUserSchema, createUserSchema } = require('./user.validation');
 
 const router = express.Router();
 
-// Only ADMIN and AGENT can list users
-router.get("/", AuthMiddleware, Rbac("ADMIN", "AGENT"), GetUsers);
+// Only ADMIN can list users
+router.get("/", AuthMiddleware, Rbac("ADMIN"), GetUsers);
 
 // Only ADMIN can create user/agent
 router.post("/", AuthMiddleware, Rbac("ADMIN"), validate(createUserSchema), createUserController);

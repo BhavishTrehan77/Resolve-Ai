@@ -23,10 +23,9 @@ import {
 } from 'lucide-react';
 
 export const DashboardLayout = () => {
-  const { user, logout, login } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [switchingRole, setSwitchingRole] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -35,52 +34,31 @@ export const DashboardLayout = () => {
 
   const userRole = (user?.role || 'EMPLOYEE').toUpperCase();
 
-  const handleRoleSwitch = async (targetRole) => {
-    if (userRole === targetRole || switchingRole) return;
-    try {
-      setSwitchingRole(true);
-      if (targetRole === 'ADMIN') {
-        await login('admin@resolve.ai', 'Admin@123');
-        navigate('/admin');
-      } else if (targetRole === 'AGENT') {
-        await login('agent@resolve.ai', 'Agent@123');
-        navigate('/agent');
-      } else {
-        await login('employee@resolve.ai', 'Employee@123');
-        navigate('/employee');
-      }
-    } catch (err) {
-      console.error('Role switch error:', err);
-    } finally {
-      setSwitchingRole(false);
-    }
-  };
-
   const getNavLinks = () => {
     switch (userRole) {
       case 'ADMIN':
         return [
-          { name: 'Dashboard', to: '/admin', icon: LayoutDashboard },
+          { name: 'Admin Dashboard', to: '/admin', icon: LayoutDashboard },
           { name: 'All Tickets', to: '/admin/tickets', icon: Ticket },
           { name: 'Escalated Tickets', to: '/admin/escalated', icon: AlertTriangle, badge: 'Escalated' },
           { name: 'Users Management', to: '/admin/users', icon: Users },
-          { name: 'Knowledge & Docs', to: '/admin/documents', icon: FolderOpen },
-          { name: 'Vectorize PDF', to: '/admin/documents/upload', icon: Upload },
-          { name: 'RAG Assistant', to: '/admin/ai-assistant', icon: Bot },
+          { name: 'Knowledge Documents', to: '/admin/documents', icon: FolderOpen },
+          { name: 'Upload Documents', to: '/admin/documents/upload', icon: Upload },
+          { name: 'AI Assistant', to: '/admin/ai-assistant', icon: Bot },
         ];
       case 'AGENT':
         return [
-          { name: 'Agent Command', to: '/agent', icon: LayoutDashboard },
-          { name: 'My Assignments', to: '/agent/assigned', icon: UserCheck },
-          { name: 'Human Escalations', to: '/agent/escalated', icon: AlertTriangle, badge: 'Urgent' },
-          { name: 'Global Queue', to: '/agent/all-tickets', icon: Ticket },
+          { name: 'Agent Dashboard', to: '/agent', icon: LayoutDashboard },
+          { name: 'Assigned Tickets', to: '/agent/assigned', icon: UserCheck },
+          { name: 'Escalated Tickets', to: '/agent/escalated', icon: AlertTriangle, badge: 'Urgent' },
         ];
       case 'EMPLOYEE':
       default:
         return [
-          { name: 'Incident Desk', to: '/employee', icon: LayoutDashboard },
-          { name: 'Report Incident', to: '/employee/create-ticket', icon: PlusCircle, highlight: true },
-          { name: 'My Incidents', to: '/employee/my-tickets', icon: Ticket },
+          { name: 'Employee Dashboard', to: '/employee', icon: LayoutDashboard },
+          { name: 'Create Ticket', to: '/employee/create-ticket', icon: PlusCircle, highlight: true },
+          { name: 'My Tickets', to: '/employee/my-tickets', icon: Ticket },
+          { name: 'AI Assistant', to: '/employee/ai-assistant', icon: Bot },
         ];
     }
   };
@@ -146,7 +124,7 @@ export const DashboardLayout = () => {
             )}
           </div>
 
-          {/* User Role Card */}
+          {/* User Role Card - Display Only */}
           <div className="px-5 pt-5 pb-2">
             <div className="p-3.5 rounded-2xl bg-gradient-to-b from-white/[0.04] to-white/[0.01] border border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -155,21 +133,24 @@ export const DashboardLayout = () => {
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                 </div>
                 <div>
-                  <p className="text-[11px] text-slate-400 font-medium">Active Session</p>
-                  <p className="text-xs font-semibold text-slate-200">{user?.name || 'Officer'}</p>
+                  <p className="text-[11px] text-slate-400 font-medium">Logged in as:</p>
+                  <p className="text-xs font-semibold text-slate-200">{user?.name || 'User'}</p>
                 </div>
               </div>
-              <span
-                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border ${
-                  userRole === 'ADMIN'
-                    ? 'bg-purple-500/15 text-purple-300 border-purple-500/30'
-                    : userRole === 'AGENT'
-                    ? 'bg-blue-500/15 text-blue-300 border-blue-500/30'
-                    : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                }`}
-              >
-                {userRole}
-              </span>
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 block font-medium">Role:</span>
+                <span
+                  className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border inline-block mt-0.5 ${
+                    userRole === 'ADMIN'
+                      ? 'bg-purple-500/15 text-purple-300 border-purple-500/30'
+                      : userRole === 'AGENT'
+                      ? 'bg-blue-500/15 text-blue-300 border-blue-500/30'
+                      : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                  }`}
+                >
+                  {userRole}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -237,55 +218,6 @@ export const DashboardLayout = () => {
           </div>
         </div>
 
-        {/* Role Switcher Pill Container */}
-        <div className="px-4 py-2">
-          <div className="p-2.5 rounded-2xl bg-slate-900/80 border border-white/10 text-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Switch Persona
-              </span>
-              <span className="text-[10px] font-mono font-bold text-brand-400 bg-brand-500/10 px-1.5 py-0.5 rounded border border-brand-500/20">
-                {userRole}
-              </span>
-            </div>
-            <div className="grid grid-cols-3 gap-1">
-              <button
-                onClick={() => handleRoleSwitch('EMPLOYEE')}
-                disabled={switchingRole}
-                className={`py-1.5 px-1 rounded-lg text-[11px] font-bold transition-all text-center cursor-pointer ${
-                  userRole === 'EMPLOYEE'
-                    ? 'bg-brand-600 text-white shadow-sm'
-                    : 'bg-slate-800/60 text-slate-400 hover:text-white'
-                }`}
-              >
-                Employee
-              </button>
-              <button
-                onClick={() => handleRoleSwitch('AGENT')}
-                disabled={switchingRole}
-                className={`py-1.5 px-1 rounded-lg text-[11px] font-bold transition-all text-center cursor-pointer ${
-                  userRole === 'AGENT'
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'bg-slate-800/60 text-slate-400 hover:text-white'
-                }`}
-              >
-                Agent
-              </button>
-              <button
-                onClick={() => handleRoleSwitch('ADMIN')}
-                disabled={switchingRole}
-                className={`py-1.5 px-1 rounded-lg text-[11px] font-bold transition-all text-center cursor-pointer ${
-                  userRole === 'ADMIN'
-                    ? 'bg-purple-600 text-white shadow-sm'
-                    : 'bg-slate-800/60 text-slate-400 hover:text-white'
-                }`}
-              >
-                Admin
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* User Card & Logout Footer */}
         <div className="p-4 border-t border-white/5">
           <div className="flex items-center justify-between gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5">
@@ -320,55 +252,34 @@ export const DashboardLayout = () => {
               <span className="font-semibold text-emerald-400">Ready & Latency 142ms</span>
             </div>
 
-            {/* Quick Persona Switcher in Header */}
-            <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-white/10 text-xs">
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider px-2">
-                Active View:
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                Session Role:
               </span>
-              <button
-                onClick={() => handleRoleSwitch('EMPLOYEE')}
-                disabled={switchingRole}
-                className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                  userRole === 'EMPLOYEE'
-                    ? 'bg-brand-600 text-white shadow'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                👤 Employee
-              </button>
-              <button
-                onClick={() => handleRoleSwitch('AGENT')}
-                disabled={switchingRole}
-                className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                  userRole === 'AGENT'
-                    ? 'bg-indigo-600 text-white shadow'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                🛡️ Agent
-              </button>
-              <button
-                onClick={() => handleRoleSwitch('ADMIN')}
-                disabled={switchingRole}
-                className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+              <span
+                className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
                   userRole === 'ADMIN'
-                    ? 'bg-purple-600 text-white shadow'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-purple-500/15 text-purple-300 border-purple-500/30'
+                    : userRole === 'AGENT'
+                    ? 'bg-blue-500/15 text-blue-300 border-blue-500/30'
+                    : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
                 }`}
               >
-                👑 Admin
-              </button>
+                {userRole}
+              </span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/employee/create-ticket')}
-              className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-brand-500 via-indigo-600 to-purple-600 shadow-md shadow-brand-500/20 hover:shadow-brand-500/35 hover:scale-[1.02] transition-all cursor-pointer"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>Report New Incident</span>
-            </button>
+            {userRole === 'EMPLOYEE' && (
+              <button
+                onClick={() => navigate('/employee/create-ticket')}
+                className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-brand-500 via-indigo-600 to-purple-600 shadow-md shadow-brand-500/20 hover:shadow-brand-500/35 hover:scale-[1.02] transition-all cursor-pointer"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>Report New Incident</span>
+              </button>
+            )}
           </div>
         </header>
 
