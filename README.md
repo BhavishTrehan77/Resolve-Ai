@@ -1,3 +1,7 @@
+
+#Deployed Link
+https://resolve-ai-x6mn.onrender.com
+
 # RESOLVEAI — AI-Powered IT Incident & Support Management Platform
 
 ResolveAI is an enterprise-grade, full-stack GenAI platform designed for autonomous IT incident triage, diagnostic root-cause analysis, semantic knowledge retrieval (RAG), and human-in-the-loop support orchestration.
