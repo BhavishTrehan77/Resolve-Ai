@@ -18,7 +18,7 @@ app.use(cors({
     origin: "https://resolve-ai-virid.vercel.app"
 }));
 
-app.options("*", cors());
+
 app.use(express.json())
 
 
